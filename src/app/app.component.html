@@ -1,6 +1,6 @@
 <button class="btn" (click)="increase()">+1</button>
-<button class="btn" (click)="decrease()" [disabled]="cannotDecrease">-1</button>
-<button class="btn" (click)="clear()" [disabled]="cannotDecrease">=0</button>
+<button class="btn" (click)="decrease()" [disabled]="cannotDecrease$ | async">-1</button>
+<button class="btn" (click)="clear()" [disabled]="cannotDecrease$ | async">=0</button>
 
-<p class="fz-30"> счетчик = {{counter}}</p>
+<p class="fz-30"> счетчик = {{count$ | async}}</p>
 <p class="fz-30" *ngIf="updatedAt"> обновлялось: {{updatedAt | date: "HH:mm:ss dd/MM/yyyy"}}</p>

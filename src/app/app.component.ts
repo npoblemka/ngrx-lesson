@@ -1,32 +1,39 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { Store} from '@ngrx/store';
+import { clear, countSelector, decrease, increase } from './reducers/counter';
+import { Observable, map } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, AsyncPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  counter = 0;
-  updatedAt?: number;
 
-  get cannotDecrease(): boolean {
-    return this.counter <= 0;
-  }
+  private store = inject (Store)
+
+  updatedAt?: number;
+  count$: Observable<number> = this.store.select(countSelector);
+  
+
+  cannotDecrease$ = this.count$.pipe(map(count => count <= 0))
+
 
   increase(): void {
     this.updatedAt = Date.now();
-    this.counter ++
+    this.store.dispatch(increase())
   }
   decrease(): void {
     this.updatedAt = Date.now();
-    this.counter --
+    this.store.dispatch(decrease())
   }
   clear(): void {
     this.updatedAt = Date.now();
-   this.counter = 0
+   this.store.dispatch(clear())
   }
 }
